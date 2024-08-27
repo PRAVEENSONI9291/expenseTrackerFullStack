@@ -6,7 +6,7 @@ const url= 'http://localhost:3000'
 
 form.addEventListener('submit', signup);
 
-function signup(e){
+async function signup(e){
     e.preventDefault();
 
     const name= document.getElementById('name').value;
@@ -20,7 +20,15 @@ function signup(e){
     }
 
 
-    axios.post(`${url}/signup`, obj);
+    let resp= await axios.post(`${url}/signup`, obj);
+     if(resp.data===false)
+     {
+        alert("user already exists")
+     }
+     else {
+        window.location.href= './login.html'
+     }
+     
 
 
 }
