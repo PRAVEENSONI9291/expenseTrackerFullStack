@@ -3,10 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Expense Tracker</title>
 </head>
 <body>
-    <h1>login page</h1>
+    <div>
+        <div>
+        <h3 style="color: blue;text-decoration: underline;">Login Page</h3>
+
+            <form id="form"  method="post" >
+            
+                <input id="email" type="email" placeholder="markdoe123@gmail.com" required>
+                <input id="password" type="password" placeholder="password" required>
+                <button type="submit">Login</button><br><br>
+                <a href="/frontEnd/index.html">New user? Sign up</a>
+        
+            </form>
+        </div>
+    </div>
     
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="login.js"></script> 
 </body>
 </html>

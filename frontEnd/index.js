@@ -28,6 +28,8 @@ async function signup(e){
      else {
         window.location.href= './login.html'
      }
+
+     form.reset();
      
 
 

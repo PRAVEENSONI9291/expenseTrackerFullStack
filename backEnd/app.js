@@ -12,8 +12,9 @@ const user= require('./models/user');
 
 const app= express();
 
-app.use(cors());
 app.use(bp.json());
+app.use(cors());
+
 
 
 app.post('/signup', async (req,res)=>{
@@ -50,8 +51,41 @@ app.post('/signup', async (req,res)=>{
     res.send("posted successsfully")
         
     } catch (error) {
+        console.log("error in app.js");
         
     }
+
+});
+
+
+app.use('/login', async (req,res)=>{
+    console.log(req.body);
+    
+
+    try {
+
+        let isUserAvailable= await user.findOne({where:{email:req.body.email}});
+
+        
+        
+
+        if (isUserAvailable) {
+            if (isUserAvailable.password === req.body.password) {
+                res.status(200).json("login successful");
+            } else {
+                res.status(403).json("password not match");
+            }
+        } else {
+            res.status(404).json("user not exists");
+        }
+
+        
+    } 
+    catch (error) {
+        console.error("Error in /login:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+    
 
 })
 
