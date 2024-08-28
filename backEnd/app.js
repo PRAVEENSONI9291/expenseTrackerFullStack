@@ -71,12 +71,12 @@ app.use('/login', async (req,res)=>{
 
         if (isUserAvailable) {
             if (isUserAvailable.password === req.body.password) {
-                res.status(200).json("login successful");
+                res.status(200).json("user login successful");
             } else {
-                res.status(403).json("password not match");
+                res.status(401).json("User not authorized");
             }
         } else {
-            res.status(404).json("user not exists");
+            res.status(404).json("User not found");
         }
 
         

@@ -23,11 +23,11 @@ async function login(e){
     try {
 
         let resp= await axios.post(url, element );
-        console.log(resp.status);
+        
         
         if(resp.status===200)
         {
-            alert("login successfull");
+            alert(resp.data);
             form.reset();
 
         }
@@ -35,15 +35,17 @@ async function login(e){
 
         
     } catch (error) {
+        
+        
 
         if(error.response)
         {
             if(error.response.status=== 403)
                 {
-                    alert("password did not match")
+                    alert(error.response.data)
                 }
                 else{
-                    alert("user does not exist")
+                    alert(error.response.data)
                 }
         }
 
