@@ -80,11 +80,25 @@ app.use('/login', async (req,res)=>{
         
 
         if (isUserAvailable) {
-            if (isUserAvailable.password === req.body.password) {
+
+            bcrypt.compare(req.body.password, isUserAvailable.password, (err, result)=>{
+
+                if(err)
+                {
+                    console.log("error");
+                    res.status(500).send("something went wrong");
+                                    
+                }
+                if(result){
                 res.status(200).json("user login successful");
-            } else {
-                res.status(401).json("User not authorized");
-            }
+
+                }
+                else {
+                    res.status(401).json("User not authorized");
+                }
+
+            } )
+             
         } else {
             res.status(404).json("User not found");
         }
