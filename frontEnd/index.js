@@ -26,6 +26,9 @@ async function signup(e){
         alert("user already exists")
      }
      else {
+      // alert(resp.message)
+      alert(resp.data.message);
+      
         window.location.href= './login.html'
      }
 

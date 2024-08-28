@@ -2,7 +2,7 @@ const express= require('express');
 const cors= require('cors');
 const bp= require('body-parser');
 const Sequelize= require('sequelize');
-
+const bcrypt= require('bcrypt');
 
 const sequelize= require('./util/database');
 const user= require('./models/user');
@@ -19,11 +19,13 @@ app.use(cors());
 
 app.post('/signup', async (req,res)=>{
 
+    const {name,email, password}= req.body;
+
     
     
 
     try {
-    let resp= await user.findOne({where:{email:req.body.email}});
+    let resp= await user.findOne({where:{email:email}});
     if(resp)
     {
         console.log("user exists");
@@ -32,7 +34,16 @@ app.post('/signup', async (req,res)=>{
         res.send(false)
     }
     else{
-        await user.create(req.body);
+
+        bcrypt.hash(password, 10, async(err,hash)=>{
+            console.log(err);
+
+
+        await user.create({name, email, password:hash});
+        res.status(201).json({message:'successfully created new user'})
+            
+            
+        })
 
     }
     
@@ -47,11 +58,10 @@ app.post('/signup', async (req,res)=>{
 
         // }
    
-
-    res.send("posted successsfully")
         
     } catch (error) {
         console.log("error in app.js");
+        res.status(500).json(error)
         
     }
 
