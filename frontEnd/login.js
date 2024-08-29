@@ -27,8 +27,9 @@ async function login(e){
         
         if(resp.status===200)
         {
-            alert(resp.data);
-            form.reset();
+            // alert(resp.data);
+            window.location.href= './expense.html'
+            
 
         }
         
@@ -40,7 +41,7 @@ async function login(e){
 
         if(error.response)
         {
-            if(error.response.status=== 403)
+            if(error.response.status=== 404)
                 {
                     alert(error.response.data)
                 }
