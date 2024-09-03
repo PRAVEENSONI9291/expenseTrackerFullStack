@@ -10,6 +10,9 @@ ul.addEventListener('click', deleteItem)
 
 const url= 'http://localhost:3000/expense'
 
+let token = localStorage.getItem('token');
+
+
 
 
 async function deleteItem(e){
@@ -61,7 +64,10 @@ async function printData(data){
 
 async function fetchData(){
 
-    let resp= await axios.get(url);
+    
+    
+
+    let resp= await axios.get(url,{headers:{'Authorization':token}});
     // console.log(resp);
 
     printData(resp.data);
@@ -83,7 +89,9 @@ const description = document.getElementById('description').value;
 const data= {
     expenseAmount:expenseAmount,
     description:description,
-    category:category
+    category:category,
+    token: token
+
 
 }
 

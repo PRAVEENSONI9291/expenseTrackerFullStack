@@ -30,9 +30,9 @@ async function signup(e){
       alert(resp.data.message);
       
         window.location.href= './login.html'
+        
      }
 
-     form.reset();
      
 
 

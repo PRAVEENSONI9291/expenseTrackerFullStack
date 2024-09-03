@@ -3,6 +3,7 @@ const cors = require('cors');
 const bp = require('body-parser');
 const Sequelize = require('sequelize');
 const bcrypt = require('bcrypt');
+const jwt= require('jsonwebtoken');
 
 const sequelize = require('./util/database');
 const user = require('./models/user');
@@ -61,7 +62,7 @@ app.post('/signup', async (req, res) => {
 
 
     } catch (error) {
-        console.log("error in app.js");
+        console.log("error in app.js", error);
         res.status(500).json(error)
 
     }
@@ -70,12 +71,18 @@ app.post('/signup', async (req, res) => {
 
 
 app.use('/login', async (req, res) => {
-    console.log(req.body);
+    // console.log(req.body);
 
 
     try {
 
+        function jwtCreateToken(userId){
+           return  jwt.sign({id:userId}, 'helloworld');
+        }
+
         let isUserAvailable = await user.findOne({ where: { email: req.body.email } });
+        // console.log(isUserAvailable.id);
+        
 
 
 
@@ -90,7 +97,8 @@ app.use('/login', async (req, res) => {
 
                 }
                 if (result) {
-                    res.status(200).json("user login successful");
+                    const token = jwtCreateToken(isUserAvailable.id);
+                    res.status(200).json({message:"login successfull", token:token});
 
                 }
                 else {
@@ -114,20 +122,7 @@ app.use('/login', async (req, res) => {
 })
 
 
-app.post('/expense', async (req, res) => {
 
-    try {
-        await expense.create(req.body);
-        res.status(200).json({ message: "expense posted successfully" });
-
-    } catch (error) {
-        res.status(500).json("something wrong", error);
-
-    }
-
-
-
-})
 
 app.delete('/expense', async (req, res) => {
 
@@ -157,17 +152,62 @@ app.delete('/expense', async (req, res) => {
 
 app.get('/expense', async (req, res) => {
 
+    let token = jwt.verify(req.headers.authorization, 'helloworld');
+    // console.log('tojen is:', token);
+    req.user= token.id;
+    // console.log(req.body);
+    // console.log(req.user);
+    
+    
+    
+
     try {
-        let expenses = await expense.findAll();
+        let expenses = await expense.findAll({where:{userId:token.id}});
 
         res.status(200).json(expenses);
+        
 
     } catch (error) {
         res.status(500).json("something wrong", error)
 
 
     }
-})
+});
+
+app.post('/expense', async (req, res) => {
+    // console.log('user is',req.body);
+    let token = jwt.verify(req.body.token, 'helloworld');
+
+    if (token)
+    {
+        // console.log(token);
+        let {expenseAmount, description, category}= req.body;
+
+        let userId= token.id;
+        
+        try {
+            await expense.create({expenseAmount:expenseAmount, description:description, category:category, userId:userId});
+            res.status(200).json({ message: "expense posted successfully" });
+    
+        } catch (error) {
+            res.status(500).json("something wrong", error);
+    
+        }
+    }
+
+
+
+    
+
+  
+
+
+
+});
+
+
+user.hasMany(expense);
+expense.belongsTo(user);
 
 
 sequelize.sync()

@@ -27,7 +27,10 @@ async function login(e){
         
         if(resp.status===200)
         {
-            // alert(resp.data);
+            // console.log(resp);
+            localStorage.setItem('token', resp.data.token)
+            
+            alert(resp.data.message);
             window.location.href= './expense.html'
             
 
@@ -41,11 +44,15 @@ async function login(e){
 
         if(error.response)
         {
-            if(error.response.status=== 404)
+            if(error.response.status== 404)
                 {
+                    console.log('this run');
+                    
                     alert(error.response.data)
                 }
                 else{
+                    console.log('no this run');
+                    
                     alert(error.response.data)
                 }
         }
